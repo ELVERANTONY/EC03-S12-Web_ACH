@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="display-4">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </h1>
+                <p class="lead">
+                    Bienvenido al Sistema de Gestión de Restaurante "Sabor Gourmet"
+                </p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3" sec:authorize="hasAnyRole('MOZO', 'ADMIN')">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Mesas Disponibles</h6>
+                                <h2 class="mb-0">8</h2>
+                            </div>
+                            <i class="bi bi-grid-3x3" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="/mesas" class="text-white text-decoration-none">
+                            Ver todas <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" sec:authorize="hasAnyRole('MOZO', 'COCINERO', 'ADMIN')">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Pedidos Activos</h6>
+                                <h2 class="mb-0">12</h2>
+                            </div>
+                            <i class="bi bi-cart" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="/pedidos" class="text-white text-decoration-none">
+                            Ver todos <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" sec:authorize="hasAnyRole('CAJERO', 'ADMIN')">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Ventas del Día</h6>
+                                <h2 class="mb-0">S/ 1,250</h2>
+                            </div>
+                            <i class="bi bi-cash-coin" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="/ventas" class="text-white text-decoration-none">
+                            Ver reporte <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" sec:authorize="hasAnyRole('CAJERO', 'ADMIN')">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Clientes</h6>
+                                <h2 class="mb-0">45</h2>
+                            </div>
+                            <i class="bi bi-people" style="font-size: 3rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <a href="/clientes" class="text-white text-decoration-none">
+                            Ver todos <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3" sec:authorize="hasAnyRole('MOZO', 'ADMIN')">
+                                <a href="/pedidos/nuevo" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-plus-circle"></i> Nuevo Pedido
+                                </a>
+                            </div>
+                            <div class="col-md-3" sec:authorize="hasAnyRole('MOZO', 'CAJERO', 'ADMIN')">
+                                <a href="/clientes/nuevo" class="btn btn-outline-success w-100">
+                                    <i class="bi bi-person-plus"></i> Nuevo Cliente
+                                </a>
+                            </div>
+                            <div class="col-md-3" sec:authorize="hasAnyRole('CAJERO', 'ADMIN')">
+                                <a href="/facturas" class="btn btn-outline-warning w-100">
+                                    <i class="bi bi-receipt"></i> Ver Facturas
+                                </a>
+                            </div>
+                            <div class="col-md-3" sec:authorize="hasRole('ADMIN')">
+                                <a href="/inventario/alertas" class="btn btn-outline-danger w-100">
+                                    <i class="bi bi-exclamation-triangle"></i> Alertas Stock
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role-based content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle"></i> Información del Sistema
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p sec:authorize="hasRole('ADMIN')">
+                            <strong>Rol:</strong> <span class="badge bg-danger">Administrador</span><br>
+                            Tienes acceso completo a todas las funcionalidades del sistema.
+                        </p>
+                        <p sec:authorize="hasRole('MOZO')">
+                            <strong>Rol:</strong> <span class="badge bg-primary">Mozo</span><br>
+                            Puedes gestionar pedidos, clientes y mesas.
+                        </p>
+                        <p sec:authorize="hasRole('CAJERO')">
+                            <strong>Rol:</strong> <span class="badge bg-success">Cajero</span><br>
+                            Puedes gestionar facturas, ventas y clientes.
+                        </p>
+                        <p sec:authorize="hasRole('COCINERO')">
+                            <strong>Rol:</strong> <span class="badge bg-warning">Cocinero</span><br>
+                            Puedes ver pedidos y platos.
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            <i class="bi bi-calendar"></i> <strong>Fecha actual:</strong> 
+                            <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

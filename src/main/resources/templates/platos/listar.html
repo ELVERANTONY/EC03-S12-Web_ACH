@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Platos</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-egg-fried"></i> Menú del Restaurante</h2>
+            <a href="/platos/nuevo" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nuevo Plato
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4" th:each="plato : ${platos}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <span class="badge bg-info mb-2" th:text="${plato.tipo}"></span>
+                        <h5 class="card-title" th:text="${plato.nombre}"></h5>
+                        <p class="card-text text-muted" th:text="${plato.descripcion}"></p>
+                        <h4 class="text-primary">S/ <span th:text="${plato.precio}"></span></h4>
+                        <p class="mb-0">
+                            <span th:if="${plato.estado}" class="badge bg-success">Disponible</span>
+                            <span th:unless="${plato.estado}" class="badge bg-danger">No Disponible</span>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="btn-group w-100" role="group">
+                            <a th:href="@{/platos/editar/{id}(id=${plato.idPlato})}" 
+                               class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <a th:href="@{/platos/eliminar/{id}(id=${plato.idPlato})}" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('¿Está seguro?')">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

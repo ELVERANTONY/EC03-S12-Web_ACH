@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Sabor Gourmet</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #ff6b35;
+            --secondary-color: #004e89;
+            --accent-color: #1a659e;
+            --success-color: #06d6a0;
+            --danger-color: #ef476f;
+            --dark-color: #1a1a2e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            transform: translateY(-2px);
+        }
+
+        .content-wrapper {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 1400px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #ff8c5a 100%);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            color: white;
+        }
+
+        .badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" sec:authorize="isAuthenticated()">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="bi bi-shop"></i> Sabor Gourmet
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="bi bi-house-door"></i> Inicio
+                        </a>
+                    </li>
+                    <!-- MOZO: Clientes, Mesas, Pedidos -->
+                    <li class="nav-item" sec:authorize="hasAnyRole('MOZO', 'ADMIN')">
+                        <a class="nav-link" href="/clientes">
+                            <i class="bi bi-people"></i> Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('MOZO', 'ADMIN')">
+                        <a class="nav-link" href="/mesas">
+                            <i class="bi bi-grid-3x3"></i> Mesas
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('MOZO', 'COCINERO', 'ADMIN')">
+                        <a class="nav-link" href="/pedidos">
+                            <i class="bi bi-cart"></i> Pedidos
+                        </a>
+                    </li>
+                    
+                    <!-- COCINERO: Vista de Cocina -->
+                    <li class="nav-item" sec:authorize="hasAnyRole('COCINERO', 'ADMIN')">
+                        <a class="nav-link" href="/pedidos/cocina">
+                            <i class="bi bi-fire"></i> Cocina
+                        </a>
+                    </li>
+                    
+                    <!-- CAJERO: Facturas y Ventas -->
+                    <li class="nav-item" sec:authorize="hasAnyRole('CAJERO', 'ADMIN')">
+                        <a class="nav-link" href="/facturas">
+                            <i class="bi bi-receipt"></i> Facturas
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('CAJERO', 'ADMIN')">
+                        <a class="nav-link" href="/ventas">
+                            <i class="bi bi-graph-up"></i> Ventas
+                        </a>
+                    </li>
+                    
+                    <!-- ADMIN: Platos, Inventario, Usuarios, Bitácora -->
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" href="/platos">
+                            <i class="bi bi-egg-fried"></i> Platos
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" href="/inventario">
+                            <i class="bi bi-box-seam"></i> Inventario
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" href="/admin/usuarios">
+                            <i class="bi bi-people-fill"></i> Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" href="/bitacora">
+                            <i class="bi bi-journal-text"></i> Bitácora
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i>
+                            <span sec:authentication="name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="dropdown-item" type="submit">
+                                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container-fluid">
+        <div class="content-wrapper">
+            <!-- Alerts -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${warning}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-circle"></i> <span th:text="${warning}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${info}" class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="bi bi-info-circle"></i> <span th:text="${info}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Main Content -->
+            <div th:replace="${content}">
+                <p>Contenido de la página</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-white mt-4 pb-3" sec:authorize="isAuthenticated()">
+        <p>&copy; 2025 Sabor Gourmet - Sistema de Gestión de Restaurante</p>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
